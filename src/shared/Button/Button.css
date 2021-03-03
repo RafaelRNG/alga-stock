@@ -1,0 +1,15 @@
+button.AppButton {
+  background-color: #09f;
+  color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 3px 6px;
+  border: none;
+  padding: 7px 10px;
+  transition: opacity 0.3s;
+  letter-spacing: 0.5px;
+}
+
+button.AppButton:hover {
+  cursor:pointer;
+  opacity: 0.9;
+}

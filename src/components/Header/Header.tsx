@@ -5,10 +5,10 @@ interface HeaderProps {
   title: string
 }
 
-const Header: FC<HeaderProps> = (props) => {
+const Header: FC<HeaderProps> = ({ title }) => {
   return (
     <header className="AppHeader">
-      <h1>{props.title}</h1>
+      <h1>{title}</h1>
 
     </header>
   )

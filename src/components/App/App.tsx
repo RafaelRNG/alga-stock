@@ -6,6 +6,10 @@ function App() {
     <div>
       <Header
         title="AlgaSotck" />
+
+      <div className="Container">
+
+      </div>
     </div>
   );
 }
