@@ -1,5 +1,5 @@
 import Container from '../../shared/Container';
-import Input from '../../shared/Input';
+import Table from '../../shared/Table';
 import Header from '../Header';
 import './App.css';
 
@@ -11,8 +11,7 @@ function App() {
         title="AlgaSotck" />
 
       <Container>
-        <Input
-          label="Street" />
+        <Table />
       </Container>
     </div>
   );
