@@ -42,7 +42,11 @@ function App() {
       <Container>
         <Table
           headers={headers}
-          data={products} />
+          data={products}
+          onDelete={console.log}
+          onDetail={console.log}
+          onEdit={console.log}
+          enableActions />
 
         <ProductForm
           form={updatingProduct}

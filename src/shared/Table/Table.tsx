@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { organizeData } from "../../utils/organizeDataForTable";
+import Button from "../Button";
 import "./Table.scss";
 
 export interface TableHeader {
@@ -19,7 +20,7 @@ interface TableProps {
   onEdit?: (item: any) => void;
 }
 
-const Table: FC<TableProps> = ({ data, headers }) => {
+const Table: FC<TableProps> = ({ data, headers, enableActions, onDelete, onEdit, onDetail }) => {
 
   const [organizedData, indexedHeaders] = organizeData(data, headers);
   return (
@@ -30,6 +31,12 @@ const Table: FC<TableProps> = ({ data, headers }) => {
             <th key={header.key} className={header.right ? "right" : ""}>
               {header.value}
             </th>)}
+          {
+            enableActions &&
+            <th className="right">
+              Actions
+            </th>
+          }
         </tr>
       </thead>
       <tbody>
@@ -43,6 +50,32 @@ const Table: FC<TableProps> = ({ data, headers }) => {
                   {row[item]}
                 </td> : null
               )}
+              {
+                enableActions &&
+                <td className="actions right">
+                  {
+                    onEdit &&
+                    <Button
+                      onClick={() => onEdit(row)}>
+                      Edit
+                   </Button>
+                  }
+                  {
+                    onDetail &&
+                    <Button
+                      onClick={() => onDetail(row)}>
+                      Detail
+                   </Button>
+                  }
+                  {
+                    onDelete &&
+                    <Button
+                      onClick={() => onDelete(row)}>
+                      Delete
+                   </Button>
+                  }
+                </td>
+              }
             </tr>
           })
         }
