@@ -5,7 +5,12 @@ import Table, { TableHeader } from '../../shared/Table';
 import Header from '../Header';
 import { Product } from "../../shared/Table/Table.mockdata";
 import ProductForm, { ProductCreator } from '../Products/ProductForm';
-import { getAllProducts } from "../../services/Products.service";
+import {
+  getAllProducts,
+  createSingleProduct,
+  updateSingleProduct,
+  deleteSingleProduct
+} from "../../services/Products.service";
 import './App.css';
 
 const headers: TableHeader[] = [
@@ -27,22 +32,31 @@ function App() {
     }
 
     fetchData()
-  }, []);
+  }, [products]);
 
-  const handleProductSubmit = (product: ProductCreator) => {
-    setProducts([
-      ...products,
-      {
-        id: products.length + 1,
-        ...product
-      }
-    ])
+  const handleProductSubmit = async (product: ProductCreator) => {
+    try {
+      await createSingleProduct(product)
+    } catch (err) {
+      Swal.fire(
+        "Oops!",
+        err.message,
+        "error"
+      )
+    }
   }
 
-  const handleProductUpdate = (newProduct: Product) => {
-    setProducts(products.map(product => product.id === newProduct.id ? newProduct : product))
-
-    setUpdatingProduct(undefined);
+  const handleProductUpdate = async (newProduct: Product) => {
+    try {
+      await updateSingleProduct(newProduct)
+      setUpdatingProduct(undefined);
+    } catch (err) {
+      Swal.fire(
+        "Oops!",
+        err.message,
+        "error"
+      )
+    }
   }
 
   const handleProductDetails = (product: Product) => {
@@ -57,8 +71,16 @@ function App() {
     setUpdatingProduct(product);
   }
 
-  const deleteProduct = (id: number) => {
-    setProducts(products.filter(product => product.id !== id))
+  const deleteProduct = async (id: string) => {
+    try {
+      await deleteSingleProduct(id);
+    } catch (err) {
+      Swal.fire(
+        "Oops!",
+        err.message,
+        "error"
+      )
+    }
   }
 
   const handleProductDelete = (product: Product) => {
@@ -72,7 +94,7 @@ function App() {
       confirmButtonText: `Yes, delete ${product.name}`
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteProduct(product.id);
+        deleteProduct(product._id);
         Swal.fire(
           'Deleted!',
           'Your file has been deleted.',

@@ -45,7 +45,7 @@ const Table: FC<TableProps> = ({ data, headers, enableActions, onDelete, onEdit,
             return <tr key={index}>
               {Object.keys(row).map((item, index) =>
                 item !== "$original" ? <td
-                  key={row.$original.id + index}
+                  key={row.$original._id + index}
                   className={indexedHeaders[item].right ? "right" : ""}>
                   {row[item]}
                 </td> : null
@@ -56,21 +56,21 @@ const Table: FC<TableProps> = ({ data, headers, enableActions, onDelete, onEdit,
                   {
                     onEdit &&
                     <Button
-                      onClick={() => onEdit(row)}>
+                      onClick={() => onEdit(row.$original)}>
                       Edit
                    </Button>
                   }
                   {
                     onDetail &&
                     <Button
-                      onClick={() => onDetail(row)}>
+                      onClick={() => onDetail(row.$original)}>
                       Detail
                    </Button>
                   }
                   {
                     onDelete &&
                     <Button
-                      onClick={() => onDelete(row)}>
+                      onClick={() => onDelete(row.$original)}>
                       Delete
                    </Button>
                   }

@@ -11,7 +11,7 @@ export interface ProductCreator {
 }
 
 interface InitialFormStates {
-  id?: number;
+  _id?: string;
   name: string;
   price: string;
   stock: string;
@@ -29,7 +29,7 @@ interface ProductFormProps {
 const ProductForm: FC<ProductFormProps> = (props) => {
   const initialFormState: InitialFormStates = props.form
     ? {
-      id: props.form.id,
+      _id: props.form._id,
       name: props.form.name,
       price: String(props.form.price),
       stock: String(props.form.stock)
@@ -57,7 +57,7 @@ const ProductForm: FC<ProductFormProps> = (props) => {
 
   const updateProduct = (product: InitialFormStates) => {
     const productDto = {
-      id: Number(product.id),
+      _id: String(product._id),
       name: String(product.name),
       price: parseFloat(product.price),
       stock: Number(product.stock)
@@ -77,7 +77,7 @@ const ProductForm: FC<ProductFormProps> = (props) => {
   }
 
   const handleFormSubmit = () => {
-    form.id
+    form._id
       ? updateProduct(form)
       : createProduct(form)
 
@@ -118,7 +118,7 @@ const ProductForm: FC<ProductFormProps> = (props) => {
         required
         value={form.stock} />
 
-      <Button> {form.id ? "Update" : "Submit"}</Button>
+      <Button> {form._id ? "Update" : "Submit"}</Button>
     </Form>
   )
 }
