@@ -23,6 +23,7 @@ interface ProductFormProps {
   onSubmit?: (product: ProductCreator) => void;
   onUpdate?: (product: Product) => void;
   onDelete?: (product: Product) => void;
+  onCancel?: () => void;
 }
 
 const ProductForm: FC<ProductFormProps> = (props) => {
@@ -117,7 +118,7 @@ const ProductForm: FC<ProductFormProps> = (props) => {
         required
         value={form.stock} />
 
-      <Button>{form.id ? "Update" : "Submit"}</Button>
+      <Button> {form.id ? "Update" : "Submit"}</Button>
     </Form>
   )
 }

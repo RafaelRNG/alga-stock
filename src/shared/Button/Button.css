@@ -13,3 +13,8 @@ button.AppButton:hover {
   cursor:pointer;
   opacity: 0.9;
 }
+
+button.cancelButton{
+  margin-left: 5px;
+  background-color: #c62828;
+}

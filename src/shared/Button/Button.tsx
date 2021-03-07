@@ -4,12 +4,13 @@ import "./Button.css";
 interface ButtonProps {
   content?: string;
   onClick?: () => void;
+  cancel?: string;
 }
 
-const Button: FC<ButtonProps> = ({ content, onClick, children }) => {
+const Button: FC<ButtonProps> = ({ content, onClick, children, cancel }) => {
   return (
     <button
-      className="AppButton"
+      className={`AppButton ${cancel}`}
       onClick={onClick}>
       {content || children}
     </button>
