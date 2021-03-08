@@ -1,14 +1,18 @@
-import { Product } from "../../shared/Table/Table.mockdata"
+import { ProductCreator } from "../../components/Products/ProductForm"
+import { getAllProducts } from "../../services/Products.service"
 import { Action } from "./Products.reducer"
 
-export const insertNewProduct = (): Action<Product> => {
+export const getProducts = () => async (dispatch: any) => {
+  const products = await getAllProducts()
+  dispatch({
+    type: "FETCH_PRODUCTS",
+    payload: products
+  })
+}
+
+export const insertNewProduct = (payload: ProductCreator): Action<ProductCreator> => {
   return {
     type: "INSERT_NEW_PRODUCT",
-    payload: {
-      _id: "338423984",
-      name: "Cookie",
-      price: 0.35,
-      stock: 700
-    }
+    payload
   }
 }
