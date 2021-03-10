@@ -1,129 +1,101 @@
-import { FC, useState } from "react";
-import Swal from "sweetalert2";
-import Table, { TableHeader } from "../../shared/Table";
-import { Product } from "../../shared/Table/Table.mockdata";
-import ProductForm, { ProductCreator } from "../Products/ProductForm";
-import {
-  updateSingleProduct,
-  deleteSingleProduct
-} from "../../services/Products.service";
-import { connect, useDispatch } from "react-redux";
-import { insertNewProduct } from "../../redux/Products/Products.actions";
+import React, { useState, useEffect } from 'react'
+import Table, { TableHeader } from '../../shared/Table'
+import { Product } from '../../shared/Table/Table.mockdata'
+import ProductForm, { ProductCreator } from './ProductForm'
+import Swal from 'sweetalert2'
+import { connect, useDispatch } from 'react-redux'
+import * as ProductsAction from '../../redux/Products/Products.actions'
+import { RootState, ThunkDispatch } from '../../redux'
 
 const headers: TableHeader[] = [
-  { key: "id", value: "#" },
-  { key: "name", value: "Product" },
-  { key: "price", value: "Price" },
-  { key: "stock", value: "Stock", right: true }
+  { key: 'id', value: '#' },
+  { key: 'name', value: 'Product' },
+  { key: 'price', value: 'Price', right: true },
+  { key: 'stock', value: 'Available Stock', right: true }
 ]
 
-interface ProductsCRUDProps {
+declare interface ProductsCRUDProps {
   products: Product[]
 }
 
-const ProductsCRUD: FC<ProductsCRUDProps> = (props) => {
-  const dispatch = useDispatch();
-  //const [products, setProducts] = useState<Product[]>([]);
-  const [updatingProduct, setUpdatingProduct] = useState<Product | undefined>(undefined);
+const ProductsCRUD: React.FC<ProductsCRUDProps> = (props) => {
+  const dispatch: ThunkDispatch = useDispatch()
 
+  const showErrorAlert =
+    (err: Error) => Swal.fire('Oops!', err.message, 'error')
+
+  const [updatingProduct, setUpdatingProduct] = useState<Product | undefined>(undefined)
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  async function fetchData() {
+    dispatch(ProductsAction.getProducts())
+      .catch(showErrorAlert)
+  }
 
   const handleProductSubmit = async (product: ProductCreator) => {
-    try {
-      dispatch(insertNewProduct(product))
-    } catch (err) {
-      Swal.fire(
-        "Oops!",
-        err.message,
-        "error"
-      )
-    }
+    dispatch(ProductsAction.insertNewProduct(product))
+      .catch(showErrorAlert)
   }
 
   const handleProductUpdate = async (newProduct: Product) => {
-    try {
-      await updateSingleProduct(newProduct)
-      setUpdatingProduct(undefined);
-    } catch (err) {
-      Swal.fire(
-        "Oops!",
-        err.message,
-        "error"
-      )
-    }
-  }
-
-  const handleProductDetails = (product: Product) => {
-    Swal.fire(
-      "Product detail",
-      `${product.name} costs $${product.price} and we have ${product.stock} available in stock.`,
-      "info"
-    )
-  }
-
-  const handleProductEdit = (product: Product) => {
-    setUpdatingProduct(product);
+    dispatch(ProductsAction.updateProduct(newProduct))
+      .then(() => setUpdatingProduct(undefined))
+      .catch(showErrorAlert)
   }
 
   const deleteProduct = async (id: string) => {
-    try {
-      await deleteSingleProduct(id);
-    } catch (err) {
-      Swal.fire(
-        "Oops!",
-        err.message,
-        "error"
-      )
-    }
+    dispatch(ProductsAction.deleteProduct(id))
+      .then(() => {
+        Swal.fire('Uhul!', 'Product successfully deleted', 'success')
+      })
+      .catch(showErrorAlert)
   }
 
   const handleProductDelete = (product: Product) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#09f',
-      cancelButtonColor: '#d33',
-      confirmButtonText: `Yes, delete ${product.name}`
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteProduct(product._id);
-        Swal.fire(
-          'Deleted!',
-          'Your file has been deleted.',
-          'success'
-        )
-      }
-    })
+    Swal
+      .fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#09f',
+        cancelButtonColor: '#d33',
+        confirmButtonText: `Yes, delete ${product.name}!`
+      })
+      .then(({ value }) => value && deleteProduct(product._id))
   }
-  /*
-    useEffect(() => {
-     // async function fetchData() {
-     //   const _products = await getAllProducts();
-     //   setProducts(_products);
-      }
-  
-      //fetchData()
-    }, [products]);
-  */
+
+  const handleProductDetail = (product: Product) => {
+    Swal.fire(
+      'Product details',
+      `${product.name} costs $${product.price} and we have ${product.stock} available in stock.`,
+      'info'
+    )
+  }
+
   return <>
     <Table
       headers={headers}
       data={props.products}
+      enableActions
       onDelete={handleProductDelete}
-      onDetail={handleProductDetails}
-      onEdit={handleProductEdit}
-      enableActions />
+      onDetail={handleProductDetail}
+      onEdit={setUpdatingProduct}
+    />
 
     <ProductForm
       form={updatingProduct}
       onSubmit={handleProductSubmit}
-      onUpdate={handleProductUpdate} />
+      onUpdate={handleProductUpdate}
+    />
   </>
 }
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: RootState) => ({
   products: state.products
 })
 
-export default connect(mapStateToProps)(ProductsCRUD);
+export default connect(mapStateToProps)(ProductsCRUD)

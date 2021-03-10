@@ -1,7 +1,7 @@
 import { TableHeader } from "../shared/Table/Table";
 
 type IndexedHeaders = {
-  [key: string]: TableHeader
+  [key: string]: TableHeader;
 }
 
 type OrganizedItem = {
