@@ -3,6 +3,7 @@ import Button from "../../shared/Button";
 import Form from "../../shared/Form"
 import Input from "../../shared/Input";
 import { Product } from "../../shared/Table/Table.mockdata";
+import withPermission from "../../utils/HOC/widthPermission";
 
 export interface ProductCreator {
   name: string;
@@ -123,4 +124,4 @@ const ProductForm: FC<ProductFormProps> = (props) => {
   )
 }
 
-export default ProductForm;
+export default withPermission(["customer", "admin"], "")(ProductForm);

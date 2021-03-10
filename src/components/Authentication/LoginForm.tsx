@@ -1,9 +1,14 @@
 import { useState, ChangeEvent } from "react";
+import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
+import { login } from "../../redux/Authentication/Authentication.actions";
 import Button from "../../shared/Button"
 import Form from "../../shared/Form";
 import Input from "../../shared/Input"
 
 const LoginForm = () => {
+
+   const dispatch = useDispatch();
 
    const [form, setForm] = useState({
       user: "",
@@ -19,8 +24,16 @@ const LoginForm = () => {
       })
    }
 
-   const handleLogin = () => {
-      console.table(form)
+   const handleLogin = async () => {
+      try {
+         await dispatch(login(form));
+      } catch (err) {
+         Swal.fire(
+            "Error",
+            err.response?.data?.message || err.message,
+            "error"
+         )
+      }
    }
 
    return <Form title="Login - AlgaStock" onSubmit={handleLogin}>

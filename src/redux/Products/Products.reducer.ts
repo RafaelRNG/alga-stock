@@ -1,5 +1,5 @@
 import { Action } from "..";
-import Products, { Product } from "../../shared/Table/Table.mockdata";
+import { Product } from "../../shared/Table/Table.mockdata";
 
 
 function productsReducer(state: Product[] = [], action: Action): Product[] {
