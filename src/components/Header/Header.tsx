@@ -13,7 +13,7 @@ const Header: FC<HeaderProps> = ({ title, firstProduct }) => {
   return (
     <header className="AppHeader">
       <h1>{title}</h1>
-      <span>{firstProduct.name}</span>
+      <span>{firstProduct?.name}</span>
     </header>
   )
 }
